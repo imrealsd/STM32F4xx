@@ -34,6 +34,40 @@ void setup_I2C1_SM (void)
     I2C1->CR1 |= I2C_CR1_PE;
 }
 
+void setup_I2C1_FM (void)
+{
+    /* scl & sda gpio config PB8 -> SCL, PB9->SDA 
+     * open drain , high speed and  pulled up 
+    */
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+    GPIOB->MODER |= GPIO_MODER_MODE8_1 | GPIO_MODER_MODE9_1;
+    GPIOB->AFR[1] |= (0x4 << GPIO_AFRH_AFSEL8_Pos) | (0x4 << GPIO_AFRH_AFSEL9_Pos);
+    GPIOB->OTYPER |= GPIO_OTYPER_OT9_Msk | GPIO_OTYPER_OT8_Msk;  
+    GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEED8_1 | GPIO_OSPEEDR_OSPEED9_Msk;
+    GPIOB->PUPDR |= GPIO_PUPDR_PUPD8_0 | GPIO_PUPDR_PUPD9_0; 
+
+    /* I2C1 CLK EN */
+    RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
+    /* 16 MHZ peripheral freq [16 Mhz apb1 freq */
+    I2C1->CR2 |= (16 << I2C_CR2_FREQ_Pos);  
+    /* I2c Fast Mode selection */
+    I2C1->CCR |= (1 << 15);
+
+    /* FPCLK = 16MHZ , TPCLK = 1/16000000 sec = 62.5 ns
+     * For 400Khz T-high + T-low = 1/400,000 = 2,500 ns 
+     * T-high = T-low = 1250 ns , acc to formulae - 
+     * T-high = T-low = CCR * TPCLK , CCR = 1250 ns / 62.5 ns = 20
+    */
+    I2C1->CCR |= (20 << I2C_CCR_CCR_Pos);
+
+    /* T-rise config [max feedback loop time] 
+     * T-rise = (300/62.5)+1 = 5.8
+    */
+    I2C1->TRISE |= (5 << I2C_TRISE_TRISE_Pos);
+    /* I2C peripheral enable */
+    I2C1->CR1 |= I2C_CR1_PE;
+}
+
 void I2C1_start (void)
 {   
     // Enable the ACK
