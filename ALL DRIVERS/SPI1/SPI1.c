@@ -44,7 +44,7 @@ void cs_Disable(void)
     GPIOA->BSRR = GPIO_BSRR_BS0;
 }
 
-void send_SPI1_16bit(int16_t data)
+void send_SPI1_16bit(uint16_t data)
 {   
     SPI1->CR1 |= SPI_CR1_SPE;
     cs_Enable();
