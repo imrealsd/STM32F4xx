@@ -19,10 +19,10 @@ int main()
 
    
     while (1){
-        set_cursor(0,15);
+        set_cursor(1,15);
         scroll_text("MCU : STM32F407VET6");
         clear_lcd();
-        set_cursor(1,15);
+        set_cursor(0,15);
         scroll_text("CPU: ARM CORTEX M4");
         clear_lcd();
     }
