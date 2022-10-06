@@ -7,4 +7,5 @@ int8_t nearest_int (float);
 void uart1_send_string (char *str);
 int8_t uart1_recieve_1byte (void);
 int8_t uart1_data_avaiilable (void);
+void int_to_string(int64_t , char [], int8_t);
 #endif

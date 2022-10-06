@@ -2,47 +2,46 @@
 #include "RTC.h"
 #include "delay.h"
 #include "UART1.h"
-#include "onboard_led.h"
+#include <stdint.h>
 
-void send_to_pc(uint8_t hour, uint8_t min, uint8_t sec);
+void send_to_pc(uint32_t, char*);
 
 int main(void)
 {   
     setup_system_clk();
-    setup_onboard_led();
     setup_uart1(9600);
     setup_on_chip_RTC();
 
-    uint8_t hour, min, sec;
+    uint32_t hour, min, sec, year, month, date, week_day;
 
     while (1) {
-    
-        get_rtc_time(&hour, &min, &sec);
-        send_to_pc(hour,min,sec);
-        delay_ms(2000);
+        
+        if (is_RTC_initialised()){
+
+            get_rtc_time(&hour, &min, &sec);
+            get_rtc_date(&year, &month, &date, &week_day);
+
+            send_to_pc(hour,"Hour  :");
+            send_to_pc(min,"Minute:");
+            send_to_pc(sec,"Second:");
+            send_to_pc(year,"Year  :20");
+            send_to_pc(month,"Month :");
+            send_to_pc(date,"Date  :");
+            send_to_pc(week_day,"Wk-Day:");
+            uart1_send_string("---------\n");
+
+            delay_ms(5000);
+        }
     }
 }
 
-void send_to_pc(uint8_t hour, uint8_t min, uint8_t sec)
+
+void send_to_pc(uint32_t val, char *name)
 {
-    char time_buff[3];
-    time_buff[2] = '\0';
-
-    time_buff[1] = (hour % 10) + 48;
-    time_buff[0] = (hour / 10) + 48;
-    uart1_send_string("Hour:");
-    uart1_send_string(time_buff);
-    uart1_send_1byte('\n');
-
-    time_buff[1] = (min % 10) + 48;
-    time_buff[0] = (min / 10) + 48;
-    uart1_send_string("Min:");
-    uart1_send_string(time_buff);
-    uart1_send_1byte('\n');
-
-    time_buff[1] = (sec % 10) + 48;
-    time_buff[0] = (sec / 10) + 48;
-    uart1_send_string("sec:");
-    uart1_send_string(time_buff);
+    char buff[3];
+    
+    int_to_string(val,buff,3);
+    uart1_send_string(name);
+    uart1_send_string (buff);
     uart1_send_1byte('\n');
 }

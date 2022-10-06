@@ -86,4 +86,15 @@ int8_t nearest_int (float val)
 }
 
 
+void int_to_string(int64_t num, char buffer[], int8_t buff_size)
+{   
+    buffer[buff_size-1] = 0;
 
+    for (int8_t i = 0; i < buff_size-1; i++){buffer[i] = '0';}
+
+    for (int8_t i = buff_size-2; i >= 0; i--){
+        int8_t temp = num % 10;
+        buffer[i] = temp + 48;
+        num = num / 10;
+    }
+}
