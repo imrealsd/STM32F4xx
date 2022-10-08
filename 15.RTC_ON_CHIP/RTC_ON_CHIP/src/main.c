@@ -10,7 +10,7 @@ int main(void)
 {   
     setup_system_clk();
     setup_uart1(9600);
-    setup_on_chip_RTC();
+    set_RTC_time_and_date(8,55,30,22,OCTOBER, 8, SATURDAY);
 
     uint32_t hour, min, sec, year, month, date, week_day;
 
