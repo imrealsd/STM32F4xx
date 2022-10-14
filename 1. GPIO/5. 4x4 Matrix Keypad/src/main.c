@@ -19,6 +19,7 @@ int main()
     while (1){
         while (key == 0){
             key = scan_keypad();
+            onboard_led_off();
             delay(50);
         }
         led_blink(key);
@@ -39,5 +40,5 @@ void led_blink (int8_t num){           // led will blink the key-value times
 void delay (int32_t val)
 {   
     volatile int32_t i;
-    for (i = 0; i < val *2000; i++);
+    for (i = 0; i < (val * 2000); i++);
 }
