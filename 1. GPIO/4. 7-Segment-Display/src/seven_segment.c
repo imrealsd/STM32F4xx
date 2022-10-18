@@ -113,3 +113,36 @@ void count_upto_number (int16_t number)
     }
 }
 
+/* Display number one time : call this func inside a loop*/
+
+void show_number(int16_t number)
+{
+    int8_t arr[10] = {0x3f, 0x06, 0x5B, 0x4F, 0X66, 0x6D, 0x7D, 0x07, 0x7F, 0x67};     /* without dot pt*/ 
+    int8_t arr_dot[10] = {0xBf, 0x86, 0xDB, 0xCF, 0XE6, 0xED, 0xFD, 0x87, 0xFF, 0xE7};  /* with dot point*/
+    int8_t d1, d2, d3, d4;
+
+    d1 =  number % 10;
+    d2 = (number / 10) % 10;
+    d3 = (number / 100) % 10;
+    d4 = (number / 1000) % 10;
+
+    GPIOA->ODR = 0x00FF & arr[d1];                        // data
+    GPIOC->ODR &= ~(1 << GPIO_ODR_OD0_Pos);               // enable digit
+    wait();
+    GPIOC->ODR |= 0x000F;                                 // disable digit
+
+    GPIOA->ODR = 0x00FF & arr[d2];                        // data
+    GPIOC->ODR &= ~(1 << GPIO_ODR_OD1_Pos);               // enable digit
+    wait();
+    GPIOC->ODR |= 0x000F;                                 // disable digit
+
+    GPIOA->ODR = 0x00FF & arr_dot[d3];                        // data
+    GPIOC->ODR &= ~(1 << GPIO_ODR_OD2_Pos);               // enable digit
+    wait();
+    GPIOC->ODR |= 0x000F;                                 // disable digit
+
+    GPIOA->ODR = 0x00FF & arr[d4];                        // data
+    GPIOC->ODR &= ~(1 << GPIO_ODR_OD3_Pos);               // enable digit
+    wait();
+    GPIOC->ODR |= 0x000F;
+}

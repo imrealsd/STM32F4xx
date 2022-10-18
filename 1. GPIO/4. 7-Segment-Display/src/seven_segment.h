@@ -7,6 +7,7 @@
 void setup_seven_segment_gpio (void);
 void count_down_number (int16_t);
 void count_upto_number (int16_t);
+void show_number(int16_t number);
 void wait (void);
 void delay (int32_t);
 #endif

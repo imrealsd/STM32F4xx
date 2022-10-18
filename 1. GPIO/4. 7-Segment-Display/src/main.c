@@ -9,14 +9,15 @@ int main()
     setup_seven_segment_gpio();
 
     while (1){
-        count_upto_number(9999);
-        delay(500);
-        count_down_number(9999);
-        delay(500);
+        // count_upto_number(9999);
+        // delay(500);
+        // count_down_number(9999);
+        // delay(500);
         // count_down_number(9999);       // 9999 --> 0000
         // delay(500);
         // count_upto_number(9999);       // 0000 --> 9999
         // delay(500);
+        show_number(222);
     }
 }
 
