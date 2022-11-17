@@ -15,7 +15,7 @@ void setup_adc1_single_channel (void)               // PA3 -> ADC123_IN3 [REFER 
     /* POWER ON ADC */
     ADC1->CR2 |= ADC_CR2_ADON;
 
-    /* ADC1 CONVERSION CLK (ADC_CLK) ENABLE [16/8 = 2 mhz] */
+    /* ADC1 CONVERSION CLK (ADC_CLK) ENABLE [16/8 = 2 mhz] [MAX ADC_CLK 36Mhz]*/
     ADC->CCR |= (0b11 << ADC_CCR_ADCPRE_Pos);      
 
     /* ADC1 SINGLE CONVERSION CHANNEL CONFIG */    
