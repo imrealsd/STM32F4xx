@@ -1,0 +1,32 @@
+# STM32CubeIDE Project Files
+*.cproject
+*.project
+*.launch
+*.settings/
+
+
+# Debug files
+/Debug/
+/Release/
+
+# IDE generated files
+.DS_Store
+*.pyc
+*.suo
+*.sln
+*.user
+*.userprefs
+*.stackdump
+*.map
+*.o
+*.d
+*.log
+*.bin
+*.hex
+*.out
+*.elf
+*.lst
+*.lss
+*.swp
+*.cache
+*.depend
