@@ -20,38 +20,31 @@
 /* Includes ------------------------------------------------------------------*/
 #include "wwdg.h"
 
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 WWDG_HandleTypeDef hwwdg;
 
 /* WWDG init function */
 void MX_WWDG_Init(void)
 {
-
-  /* USER CODE BEGIN WWDG_Init 0 */
-
-  /* USER CODE END WWDG_Init 0 */
-
-  /* USER CODE BEGIN WWDG_Init 1 */
-
-  /* USER CODE END WWDG_Init 1 */
-
-  /*Window span: 127 to 64(0x40): wathcdog counter has to be rewritten within this span*/
+  /**
+   * Max Window span: 127(0x7F) to 64(0x40): wathcdog counter has to be rewritten within this span
+   * WDG input clk = HCLK/8 = 42/(8 * 4096) = (int) 1281 Hz : time period = 1/1281 sec  [4096 internal divider]
+   * Max time delay : (1/1281) * (127-64) sec = 0.0499 sec = 49.9 mili sec
+   * 
+   * Now , Let window = 88
+   * window span = 88 to 64 i.e  (127-88)*(1000/1281) mili sec to 49.9 mili sec = 30 ms to 49.9 ms
+   * within this sapn counter has to be refreshed
+   */
   hwwdg.Instance = WWDG;
   hwwdg.Init.Prescaler = WWDG_PRESCALER_8;
-  hwwdg.Init.Window = 127;
+  hwwdg.Init.Window = 88;    
   hwwdg.Init.Counter = 127;
   hwwdg.Init.EWIMode = WWDG_EWI_DISABLE;
+
   if (HAL_WWDG_Init(&hwwdg) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN WWDG_Init 2 */
-
-  /* USER CODE END WWDG_Init 2 */
-
 }
 
 void HAL_WWDG_MspInit(WWDG_HandleTypeDef* wwdgHandle)
@@ -59,17 +52,7 @@ void HAL_WWDG_MspInit(WWDG_HandleTypeDef* wwdgHandle)
 
   if(wwdgHandle->Instance==WWDG)
   {
-  /* USER CODE BEGIN WWDG_MspInit 0 */
-
-  /* USER CODE END WWDG_MspInit 0 */
-    /* WWDG clock enable */
     __HAL_RCC_WWDG_CLK_ENABLE();
-  /* USER CODE BEGIN WWDG_MspInit 1 */
-
-  /* USER CODE END WWDG_MspInit 1 */
   }
 }
 
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
