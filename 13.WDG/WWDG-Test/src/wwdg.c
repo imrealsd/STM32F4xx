@@ -28,7 +28,7 @@ void MX_WWDG_Init(void)
 {
   /**
    * Max Window span: 127(0x7F) to 64(0x40): wathcdog counter has to be rewritten within this span
-   * WDG input clk = HCLK/8 = 42/(8 * 4096) = (int) 1281 Hz : time period = 1/1281 sec  [4096 internal divider]
+   * WDG input clk = HCLK/(8*4096) = 42000000/(8 * 4096) = (int) 1281 Hz : time period = 1/1281 sec  [4096 internal divider]
    * Max time delay : (1/1281) * (127-64) sec = 0.0499 sec = 49.9 mili sec
    * 
    * Now , Let window = 88
