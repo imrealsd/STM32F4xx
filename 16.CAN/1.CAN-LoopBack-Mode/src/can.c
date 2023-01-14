@@ -20,23 +20,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "can.h"
 
-/* USER CODE BEGIN 0 */
 
-/* USER CODE END 0 */
 
 CAN_HandleTypeDef hcan1;
 
 /* CAN1 init function */
 void MX_CAN1_Init(void)
 {
-
-  /* USER CODE BEGIN CAN1_Init 0 */
-
-  /* USER CODE END CAN1_Init 0 */
-
-  /* USER CODE BEGIN CAN1_Init 1 */
-
-  /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
   hcan1.Init.Prescaler = 18;
   hcan1.Init.Mode = CAN_MODE_LOOPBACK;
@@ -53,11 +43,27 @@ void MX_CAN1_Init(void)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN CAN1_Init 2 */
 
-  /* USER CODE END CAN1_Init 2 */
+  /*can filter configuration*/
+  CAN_FilterTypeDef CanFilterConfig;
 
+  CanFilterConfig.FilterActivation = CAN_FILTER_ENABLE;
+  CanFilterConfig.FilterBank = 10; /*any between 0 to 12*/
+  CanFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0; 
+  CanFilterConfig.FilterIdHigh = 0x103 << 5;
+  CanFilterConfig.FilterIdLow = 0x00000;
+  CanFilterConfig.FilterMaskIdHigh = 0x103 << 5;
+  CanFilterConfig.FilterMaskIdLow = 0x0000;
+  CanFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+  CanFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+  CanFilterConfig.SlaveStartFilterBank = 13; /*13 to 27 are assigned to slave CAN (CAN 2) OR 0 to 12 are assgned to CAN1*/
+
+  if (HAL_CAN_ConfigFilter(&hcan1, &CanFilterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
+
 
 void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
 {
