@@ -26,7 +26,7 @@ void SystemClock_Config(void);
 
 CAN_RxHeaderTypeDef RxHeader;
 CAN_TxHeaderTypeDef TxHeader;
-uint32_t TxMailbox[3]; /*3 mailboxes*/
+uint32_t TxMailboxID[3];         /*to store id of mailbox used to transmit a frame*/
 uint8_t TxData[8], RxData[8];
 uint8_t count = 0;
 
@@ -52,15 +52,15 @@ int main(void)
 	TxHeader.StdId = 0x103;
 	TxHeader.TransmitGlobalTime = DISABLE;
 
-	TxData[0] = 0x11; TxData[1] = 0x22; TxData[2] = 0x33; TxData[3] = 0x44;
+	TxData[0] = '0'; TxData[1] = '1'; TxData[2] = '2'; TxData[3] = '3';
 
-	if(HAL_CAN_AddTxMessage(&hcan1, &TxHeader, &TxData[0], &TxMailbox[0]) != HAL_OK){
+	if(HAL_CAN_AddTxMessage(&hcan1, &TxHeader, &TxData[0], &TxMailboxID[0]) != HAL_OK){
 		Error_Handler();
 	}
-	if(HAL_CAN_AddTxMessage(&hcan1, &TxHeader, &TxData[1], &TxMailbox[1]) != HAL_OK){
+	if(HAL_CAN_AddTxMessage(&hcan1, &TxHeader, &TxData[1], &TxMailboxID[1]) != HAL_OK){
 		Error_Handler();
 	}
-	if(HAL_CAN_AddTxMessage(&hcan1, &TxHeader, &TxData[2], &TxMailbox[2]) != HAL_OK){
+	if(HAL_CAN_AddTxMessage(&hcan1, &TxHeader, &TxData[2], &TxMailboxID[2]) != HAL_OK){
 		Error_Handler();
 	}
 
@@ -70,7 +70,7 @@ int main(void)
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxData);
+	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, &RxData[count]);
 	count++;
 }
 
