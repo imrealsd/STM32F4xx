@@ -23,6 +23,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void CAN_Init_TxHeader(void);
 
 CAN_RxHeaderTypeDef RxHeader;
 CAN_TxHeaderTypeDef TxHeader;
@@ -36,7 +37,6 @@ uint8_t count = 0;
  */
 int main(void)
 {
-
 	HAL_Init();
 	SystemClock_Config();
 	MX_GPIO_Init();
@@ -45,13 +45,7 @@ int main(void)
 	HAL_CAN_Start(&hcan1);
 	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 
-	TxHeader.DLC = 1;
-	TxHeader.IDE = CAN_ID_STD;
-	TxHeader.RTR = CAN_RTR_DATA;
-	TxHeader.ExtId = 0;
-	TxHeader.StdId = 0x103;
-	TxHeader.TransmitGlobalTime = DISABLE;
-
+	CAN_Init_TxHeader();
 	TxData[0] = '0'; TxData[1] = '1'; TxData[2] = '2'; TxData[3] = '3';
 
 	if(HAL_CAN_AddTxMessage(&hcan1, &TxHeader, &TxData[0], &TxMailboxID[0]) != HAL_OK){
@@ -67,7 +61,25 @@ int main(void)
 	while (1){}
 }
 
+/**
+ * @brief  configure CAN tx-header
+ * @retval none
+ */
+static void CAN_Init_TxHeader(void)
+{
+	TxHeader.DLC = 1;
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.RTR = CAN_RTR_DATA;
+	TxHeader.ExtId = 0;
+	TxHeader.StdId = 0x103;
+	TxHeader.TransmitGlobalTime = DISABLE;
+}
 
+
+/**
+ * @brief  fifo-0 msg pending interrupt
+ * @retval none
+ */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
 	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, &RxData[count]);
