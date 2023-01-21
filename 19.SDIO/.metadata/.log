@@ -1,0 +1,31 @@
+!SESSION 2023-01-20 22:18:39.430 -----------------------------------------------
+eclipse.buildId=Version 1.8.0
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_IN
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-01-20 22:19:24.806
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-01-20 22:19:24.877
+!MESSAGE Log4j initialized with config file /home/subhadeep/Embedded/ESP Practice/STM32F407-REGISTER/19.SDIO/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-01-20 22:19:29.489
+!MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2023-01-20 22:20:32.732 -----------------------------------------------
+eclipse.buildId=Version 1.8.0
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_IN
+Framework arguments:  /home/subhadeep/Embedded/ESP Practice/STM32F407-REGISTER/19.SDIO/SDIO-Read-Write.ioc
+Command-line arguments:  -os linux -ws gtk -arch x86_64 /home/subhadeep/Embedded/ESP Practice/STM32F407-REGISTER/19.SDIO/SDIO-Read-Write.ioc
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-01-20 22:20:41.410
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-01-20 22:20:41.465
+!MESSAGE Log4j initialized with config file /home/subhadeep/Embedded/ESP Practice/STM32F407-REGISTER/19.SDIO/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-01-20 22:20:44.769
+!MESSAGE Started RMI Server, listening on port 41337
