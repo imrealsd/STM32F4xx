@@ -22,12 +22,12 @@
 #include "sdio.h"
 #include "usart.h"
 #include "gpio.h"
-
+#include "File_Handling.h"
+#define MAX_SIZE (100)
 
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-
 
 
 /**
@@ -44,10 +44,20 @@ int main(void)
 	MX_USART1_UART_Init();
 	MX_FATFS_Init();
 
+	char buffer[MAX_SIZE] = "Hello World";
 
-	while (1)
-	{
+	Mount_SD("/");
+	Format_SD();
+	Create_File("FILE1.TXT");
+	Unmount_SD("/");
 
+
+	while (1){
+
+		Mount_SD("/");
+		Update_File("FILE1.TXT", buffer);
+		Unmount_SD("/");
+		HAL_Delay(2000);
 	}
 }
 
