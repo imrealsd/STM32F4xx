@@ -6135,6 +6135,5 @@ int f_printf (
 
 	return putc_flush(&pb);
 }
-
 #endif /* !_FS_READONLY */
 #endif /* _USE_STRFUNC */
