@@ -1,3 +1,6 @@
+// CAN "twai_receive() func not working : known error of twai.h libraray"
+
+
 #include <Arduino.h>
 #include <driver/gpio.h>
 #include "driver/twai.h"
@@ -21,14 +24,14 @@ void loop()
 	if (twai_receive(&recvMsg, pdMS_TO_TICKS(10000)) == ESP_OK){
 		gCount++;
 		Serial.print(gCount);
-		Serial.println(" No. Msg Received");
+		Serial.println(" Msg Received");
 	}
 }
 
 
 static void esp32_setup_TWAI(void)
 {	
-	twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(GPIO_NUM_22, GPIO_NUM_23, TWAI_MODE_NORMAL);
+	twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(GPIO_NUM_21, GPIO_NUM_22, TWAI_MODE_NORMAL);
   	twai_timing_config_t t_config = TWAI_TIMING_CONFIG_500KBITS();
   	twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 	
