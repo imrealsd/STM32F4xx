@@ -20,8 +20,11 @@
 #include "main.h"
 #include "usart.h"
 #include "gpio.h"
+#include <string.h>
 
 void SystemClock_Config(void);
+void MCU_EnterStopMode(void);
+void MCU_TaskAfterWakeUp(void);
 
 
 /**
@@ -29,16 +32,68 @@ void SystemClock_Config(void);
  * @retval int
  */
 int main(void)
-{
+{	
+	/*configure peripherals & clocks*/
 	HAL_Init();
 	SystemClock_Config();
 	MX_GPIO_Init();
 	MX_USART1_UART_Init();
 
 	while (1){
+		/*enter stop mode*/
+		MCU_EnterStopMode();
+		/*task after waking up from stop mode*/
+		MCU_TaskAfterWakeUp();
 	}
+	return 0;
 }
 
+
+/**
+ * @brief  wait for 5 sec & enter stop mode
+ * @retval none
+ */
+void MCU_EnterStopMode(void)
+{	
+	/**
+	 * turn on led , send entering-sleep msg to pc, wait 5 sec , then turn off led
+	 * suspend systick & enter sleepmode
+	 */
+	char *msg = "Entering into Stop Mode in 5 sec\r\n";
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+	HAL_UART_Transmit(&huart1, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
+	HAL_Delay(5000);
+  	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+	HAL_SuspendTick();
+	HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
+}
+
+
+/**
+ * @brief  EXTI handler routine
+ * @retval none
+ */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
+{	
+	/*resume systemtick clk & re-configure all clocks after waking up (as core the clocks are turned off in stop mode)*/
+	char *msg = "Wake up to Reality\r\n";
+	HAL_ResumeTick();
+	SystemClock_Config();
+	/*send wakeup msg to pc*/
+	HAL_UART_Transmit(&huart1, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
+}
+
+/**
+ * @brief  blink led after waking up
+ * @retval int
+ */
+void MCU_TaskAfterWakeUp(void)
+{
+	for (volatile int i = 0; i < 20; i++){
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
+		HAL_Delay(100);
+	}
+}
 
 
 /**
@@ -85,9 +140,8 @@ void SystemClock_Config(void)
 	}
 }
 
-/* USER CODE BEGIN 4 */
 
-/* USER CODE END 4 */
+
 
 /**
  * @brief  This function is executed in case of error occurrence.
