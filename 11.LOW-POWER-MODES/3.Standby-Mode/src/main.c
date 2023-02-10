@@ -39,6 +39,10 @@ int main(void)
     SystemClock_Config();
     MX_GPIO_Init();
     MX_USART1_UART_Init();
+
+    /*Clear Standby  flag*/
+    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
+    
     
     /*Send msg to pc , turn on led, wait 5 sec, turn off led*/
     char *msg = "Going into Standby Mode within 5 seconds\r\n";
@@ -47,7 +51,12 @@ int main(void)
     HAL_Delay(5000);
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
     
-    /*Enter into standby mode*/
+    /**
+     * Clear wakeup flag, Enable wakeup pin (PA0) Enter into standby mode
+     * Device can be woke up using : reset pin or PA0 pin
+     */
+    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+    HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
     HAL_PWR_EnterSTANDBYMode();
 
     while (1){}
