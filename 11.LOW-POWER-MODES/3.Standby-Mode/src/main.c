@@ -54,6 +54,7 @@ int main(void)
     /**
      * Clear wakeup flag, Enable wakeup pin (PA0) Enter into standby mode
      * Device can be woke up using : reset pin or PA0 pin
+     * refer to : errata sheet stm32f40xx for standby workaround sequence
      */
     __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
