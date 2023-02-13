@@ -24,10 +24,12 @@
 /*Private Includes*/
 #include "fonts.h"
 #include "ssd1306.h"
+#include "bitmap.h"
 
 /*private function prototypes*/
 void SystemClock_Config(void);
-static void printHelloWorld(void);
+static void test_basicLibraryFunctions(void);
+static void test_bitmapFunction(void);
 
 /**
  * @brief  The application entry point.
@@ -44,19 +46,103 @@ int main(void)
     /*Initialize oled display*/
     SSD1306_Init ();
 
-    printHelloWorld();
+    test_basicLibraryFunctions();
+    test_bitmapFunction();
+    SSD1306_Clear();
 
     while (1){}
 }
 
-
-static void printHelloWorld(void)
+static void test_bitmapFunction(void)
 {
-    SSD1306_GotoXY (10,10); // goto 10, 10 
-    SSD1306_Puts ("HELLO", &Font_11x18, 1); // print Hello 
-    SSD1306_GotoXY (10, 30); 
+    SSD1306_Clear();
+    SSD1306_DrawBitmap(30, 0, GITHUB_logo, 128, 64, SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(1000);
+
+    SSD1306_Clear();
+    SSD1306_DrawBitmap(0, 0, ECEN_logo, 128, 64, SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(1000);
+
+    SSD1306_Clear();
+    SSD1306_DrawBitmap(0, 0, Linux_logo, 128, 64, SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(1000);
+}
+
+
+static void test_basicLibraryFunctions(void)
+{   
+    SSD1306_GotoXY (0,0); 
+    SSD1306_Puts ("HELLO", &Font_16x26, 1);
+    SSD1306_GotoXY (0, 30); 
     SSD1306_Puts ("WORLD !!", &Font_11x18, 1); 
-    SSD1306_UpdateScreen(); // update screen
+    SSD1306_UpdateScreen();
+    HAL_Delay(400);
+
+    SSD1306_Clear();
+    SSD1306_ToggleInvert();
+    SSD1306_UpdateScreen(); 
+    SSD1306_ToggleInvert();
+    SSD1306_UpdateScreen(); 
+    HAL_Delay(400);
+
+    SSD1306_Clear();
+    SSD1306_Fill(SSD1306_COLOR_WHITE);
+    SSD1306_Fill(SSD1306_COLOR_BLACK);
+    SSD1306_UpdateScreen();
+    HAL_Delay(400);
+
+    SSD1306_Clear();
+    SSD1306_DrawPixel(10,20,SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(400);
+
+    SSD1306_Clear();
+    SSD1306_GotoXY(10,10);
+    SSD1306_Putc('S', &Font_11x18, SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(400);
+
+    SSD1306_Clear();
+    SSD1306_DrawLine(0, 0, 127, 63, SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(400);
+
+    SSD1306_Clear();
+    SSD1306_DrawTriangle(50, 0, 0, 20, 126, 30, SSD1306_COLOR_WHITE);
+    SSD1306_ToggleInvert();
+    SSD1306_UpdateScreen();
+    HAL_Delay(200);
+    SSD1306_ToggleInvert();
+    SSD1306_UpdateScreen();
+    HAL_Delay(400);
+
+    SSD1306_Clear();
+    SSD1306_DrawFilledRectangle(10,10,80,40, SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(400);
+
+    SSD1306_Clear();
+    SSD1306_DrawFilledCircle(63, 31, 10, SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(400);
+
+
+    SSD1306_Clear();
+    SSD1306_GotoXY(0, 20);
+    SSD1306_Puts("Hello", &Font_11x18, SSD1306_COLOR_WHITE);
+    SSD1306_UpdateScreen();
+    HAL_Delay(500);
+
+    SSD1306_ScrollRight(0x00, 0xff);  // scroll entrire display [row 0-127]
+    HAL_Delay(350);
+    SSD1306_ScrollLeft (0x00, 0xff);
+    HAL_Delay(350);
+    SSD1306_Stopscroll();
+    /*Diagonal srolls are not working*/
+
 }   
 
 
