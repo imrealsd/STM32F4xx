@@ -1,4 +1,4 @@
-/* USER CODE BEGIN Header */
+
 /**
  ******************************************************************************
  * @file           : main.c
@@ -30,6 +30,15 @@
 #include "main.h"
 #include "usart.h"
 #include "gpio.h"
+#include "hc05.h"
+
+struct btModule {
+
+	char  name[MAX_RESPONSE_LEN];
+	char  address[MAX_RESPONSE_LEN];
+	char  version[MAX_RESPONSE_LEN];
+	char   mode[MAX_RESPONSE_LEN];
+} hc05;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -40,16 +49,28 @@ void SystemClock_Config(void);
  * @retval int
  */
 int main(void)
-{
+{	
 	HAL_Init();
 	SystemClock_Config();
 	MX_GPIO_Init();
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
 
-	while (1){
-		
+	if (HC05_verifyATMode() == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"Currently in AT mode\r\n", 23, HAL_MAX_DELAY);
 	}
+
+	if (HC05_getModuleInfo((char* const ) &hc05.name ,(char* const ) &hc05.address,
+	        (char* const) &hc05.version,(char* const ) &hc05.mode) == HC05_OK){
+
+		HAL_UART_Transmit(&huart1, (uint8_t *)"Module Info:\r\n", 23, HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.name,    strlen(hc05.name), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.address, strlen(hc05.address), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.version, strlen(hc05.version), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.mode,    strlen(hc05.mode), HAL_MAX_DELAY);
+	}
+
+	while (1);
 }
 
 
