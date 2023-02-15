@@ -63,7 +63,7 @@ int main(void)
 	if (HC05_getModuleInfo((char* const ) &hc05.name ,(char* const ) &hc05.address,
 	        (char* const) &hc05.version,(char* const ) &hc05.mode) == HC05_OK){
 
-		HAL_UART_Transmit(&huart1, (uint8_t *)"Module Info:\r\n", 23, HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *)"Module Info:\r\n", 15, HAL_MAX_DELAY);
 		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.name,    strlen(hc05.name), HAL_MAX_DELAY);
 		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.address, strlen(hc05.address), HAL_MAX_DELAY);
 		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.version, strlen(hc05.version), HAL_MAX_DELAY);
@@ -72,6 +72,7 @@ int main(void)
 
 	while (1);
 }
+
 
 
 
