@@ -19,7 +19,8 @@
 
 #define MAX_COMMAND_LEN    50
 #define MAX_RESPONSE_LEN   50
-#define MAX_HC05_DELAY     1000
+#define OK_RESPONSE_LEN    4
+#define MAX_HC05_DELAY     300 // in ms
 
 /* Enums */
 typedef enum {
@@ -33,9 +34,9 @@ typedef enum {
 /* Function Prototypes*/
 
 HC05_StatusType HC05_verifyATMode(void);
-HC05_StatusType HC05_enterDataMode(void);
-HC05_StatusType HC05_getModuleInfo(char* const name, char* const address, 
-                                  char* const version, char* const mode);
-
+HC05_StatusType HC05_backToDefaultMode(void);
+HC05_StatusType HC05_getModuleInfo(char* const name, char* const address, char* const version, 
+                                   char* const mode, char* const passwd, char* const uartSpeed);
+HC05_StatusType HC05_FixedAddr_MasterMode(void);
 
 #endif //  HC05_H
