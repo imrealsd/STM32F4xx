@@ -37,7 +37,10 @@ struct btModule {
 	char  name[MAX_RESPONSE_LEN];
 	char  address[MAX_RESPONSE_LEN];
 	char  version[MAX_RESPONSE_LEN];
-	char   mode[MAX_RESPONSE_LEN];
+	char  mode[MAX_RESPONSE_LEN];
+	char  password[MAX_RESPONSE_LEN];
+	char  uartSpeed[MAX_RESPONSE_LEN];
+
 } hc05;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -57,17 +60,24 @@ int main(void)
 	MX_USART2_UART_Init();
 
 	if (HC05_verifyATMode() == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *)"Currently in AT mode\r\n", 23, HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered in AT mode\r\n", 25, HAL_MAX_DELAY);
 	}
 
 	if (HC05_getModuleInfo((char* const ) &hc05.name ,(char* const ) &hc05.address,
-	        (char* const) &hc05.version,(char* const ) &hc05.mode) == HC05_OK){
+		(char* const) &hc05.version,(char* const ) &hc05.mode, (char* const)&hc05.password, (char* const)&hc05.uartSpeed) == HC05_OK){
 
-		HAL_UART_Transmit(&huart1, (uint8_t *)"Module Info:\r\n", 15, HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.name,    strlen(hc05.name), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.address, strlen(hc05.address), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.version, strlen(hc05.version), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.mode,    strlen(hc05.mode), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Module Information :\r\n", 27, HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.name,       strlen(hc05.name), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.address,    strlen(hc05.address), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.version,    strlen(hc05.version), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.mode,       strlen(hc05.mode), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.password,   strlen(hc05.password), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.uartSpeed,  strlen(hc05.uartSpeed), HAL_MAX_DELAY);
+
+	}
+
+	if (HC05_FixedAddr_MasterMode() == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered Fixed Address Master Mode\r\n", 40 , HAL_MAX_DELAY);
 	}
 
 	while (1);
