@@ -21,7 +21,7 @@
  * PA0   : HC05 VCC
  * PA1   : HC05 EN
  * UART1 : pc tp stm32 communication   [baud rate 115200]
- * UART2 : stm32 to hc05 communication [baud rate 38400] 
+ * UART2 : stm32 to hc05_master communication [baud rate 38400] 
 */
 
 
@@ -34,17 +34,19 @@
 
 struct btModule {
 
-	char  name[MAX_RESPONSE_LEN];
-	char  address[MAX_RESPONSE_LEN];
-	char  version[MAX_RESPONSE_LEN];
-	char  mode[MAX_RESPONSE_LEN];
-	char  password[MAX_RESPONSE_LEN];
-	char  uartSpeed[MAX_RESPONSE_LEN];
+	char  name [MAX_RESPONSE_LEN];
+	char  address [MAX_RESPONSE_LEN];
+	char  version [MAX_RESPONSE_LEN];
+	char  mode [MAX_RESPONSE_LEN];
+	char  password [MAX_RESPONSE_LEN];
+	char  uartSpeed [MAX_RESPONSE_LEN];
 
-} hc05;
+} hc05_master;
+
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void test_hc05LibraryFunctions(void);
 
 
 /**
@@ -59,31 +61,44 @@ int main(void)
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
 
-	if (HC05_verifyATMode() == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered in AT mode\r\n", 25, HAL_MAX_DELAY);
-	}
-
-	if (HC05_getModuleInfo((char* const ) &hc05.name ,(char* const ) &hc05.address,
-		(char* const) &hc05.version,(char* const ) &hc05.mode, (char* const)&hc05.password, (char* const)&hc05.uartSpeed) == HC05_OK){
-
-		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Module Information :\r\n", 27, HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.name,       strlen(hc05.name), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.address,    strlen(hc05.address), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.version,    strlen(hc05.version), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.mode,       strlen(hc05.mode), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.password,   strlen(hc05.password), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05.uartSpeed,  strlen(hc05.uartSpeed), HAL_MAX_DELAY);
-
-	}
-
-	if (HC05_FixedAddr_MasterMode() == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered Fixed Address Master Mode\r\n", 40 , HAL_MAX_DELAY);
-	}
+	test_hc05LibraryFunctions();
 
 	while (1);
 }
 
 
+/**
+ * @brief  test hc05 library functions
+ * @retval none
+ */
+static void test_hc05LibraryFunctions(void)
+{
+	
+	if (HC05_verifyATMode() == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Powered Up into AT mode\r\n", 30, HAL_MAX_DELAY);
+	}
+
+	if (HC05_getModuleInfo((char* const ) &hc05_master.name ,(char* const ) &hc05_master.address,
+		(char* const) &hc05_master.version,(char* const ) &hc05_master.mode, (char* const)&hc05_master.password, (char* const)&hc05_master.uartSpeed) == HC05_OK){
+
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Module Information :\r\n", 27, HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.name,       strlen(hc05_master.name), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.address,    strlen(hc05_master.address), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.version,    strlen(hc05_master.version), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.mode,       strlen(hc05_master.mode), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.password,   strlen(hc05_master.password), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.uartSpeed,  strlen(hc05_master.uartSpeed), HAL_MAX_DELAY);
+
+	}
+
+	if (HC05_fixedAddr_masterModeEnter() == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered Fixed Address Master Mode\r\n", 40 , HAL_MAX_DELAY);
+	}
+
+	if (HC05_fixedAddr_masterModeBind((char* const) "1234,56,abcdef\r\n") == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Binded to Provided Slave Address\r\n", 39, HAL_MAX_DELAY);
+	}
+}
 
 
 /**
