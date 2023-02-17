@@ -20,11 +20,16 @@
  *    In AT-CMD mode master or slave mode can be selected & the all the parameters [name,paswd..ect] can be modified
  * 2. Normal powering on : boot into standard/ data mode [led blink continiously waiting for paring]
  * 
- * 3. MASTER -> 'CMODE' = 0 : connect to provided fix slave address using 'BIND'
- * 4. MASTER -> 'CMODE' = 1 : connect to any address by 'INIT' -> 'INQ' -> 'RNAME' -> 'PAIR' -> 'LINK'
- * 5. SLAVE  -> 'CMODE' = 1 : conncet to any address
+ * 3. MASTER -> 'CMODE' = 0 : 
+ *    SLAVE ->  'CMODE' = 1:
+ *    connect to provided fix slave address using 'BIND'
  * 
- * 6. Master & Slave password have be same in-oder to connect / pair.
+ * 4. MASTER -> 'CMODE' = 1 :
+ *    SLAVE  -> 'CMODE' = 1 :  
+ *    connect to any address by SPP 'INIT' -> 'INQ' -> 'RNAME' -> 'PAIR' -> 'LINK' [master side]
+ *    SPP INIT -> STATE-PARIABLE -> STATE-PAIRED -> STATE-CONNECTED [slave side]
+ * 
+ * 5. Master & Slave password have be same in-oder to connect / pair.
 */
 
 
@@ -118,8 +123,11 @@ HC05_StatusType HC05_getModuleInfo(char* const name, char* const address,
                 usrPassedMemAddr = uartSpeed;
                 break;
         }
+
         /*Using MAX_HC05_DELAY cause response size is unknown , communication is expected to be finished within that time
-        using HAL_MAX_DELAY will hangup forever [casuse response size < max response size and func wait forever]*/
+        using HAL_MAX_DELAY will hangup forever waiting for rx_complete_flag 
+        [casuse response size < max response size and func wait forever]*/
+
         HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), MAX_HC05_DELAY);
         HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, sizeof(rxMsg),  MAX_HC05_DELAY);
         strncpy(usrPassedMemAddr, rxMsg, MAX_RESPONSE_LEN);
@@ -136,7 +144,7 @@ HC05_StatusType HC05_getModuleInfo(char* const name, char* const address,
 
 
 
-HC05_StatusType HC05_FixedAddr_MasterMode(void)
+HC05_StatusType HC05_fixedAddr_masterModeEnter(void)
 {
     char txMsg[MAX_COMMAND_LEN];
     char rxMsg[MAX_RESPONSE_LEN];
@@ -145,8 +153,8 @@ HC05_StatusType HC05_FixedAddr_MasterMode(void)
     memset(rxMsg, 0, MAX_RESPONSE_LEN);
 
     strcpy(txMsg, "AT+RMAAD\r\n");
-    /*using HAL_MAX_DELAY , response size is known , function will return after checking fixed no. of bytes
-    program will not hangup here*/
+    /*using HAL_MAX_DELAY , response size is known , function will return after getting fixed no. of bytes
+    program will not hangup here as long as we got response of that size*/
     HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
     HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
 
@@ -165,7 +173,7 @@ HC05_StatusType HC05_FixedAddr_MasterMode(void)
    
 
     memset(txMsg, 0, MAX_COMMAND_LEN);
-    strcpy(txMsg, "AT+CMODE=1\r\n");
+    strcpy(txMsg, "AT+CMODE=0\r\n");
     HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
     HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
 
@@ -176,3 +184,26 @@ HC05_StatusType HC05_FixedAddr_MasterMode(void)
     return HC05_OK;
 }
 
+
+HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr)
+{
+    char txMsg[MAX_COMMAND_LEN];
+    char rxMsg[MAX_RESPONSE_LEN];
+
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    memset(rxMsg, 0, MAX_RESPONSE_LEN);
+
+    strcpy(txMsg, "AT+BIND=");
+    strcat(txMsg, slaveAddr);
+    strcat(rxMsg,"\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
+
+    if (strncmp(rxMsg, "OK", 2) != 0){
+        return HC05_FAIL;
+    }
+    return HC05_OK;
+}
+
+HC05_StatusType HC05_slaveModeEnter(void){}
+HC05_StatusType HC05_getModuleState(void){}

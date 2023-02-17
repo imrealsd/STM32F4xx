@@ -37,6 +37,7 @@ HC05_StatusType HC05_verifyATMode(void);
 HC05_StatusType HC05_backToDefaultMode(void);
 HC05_StatusType HC05_getModuleInfo(char* const name, char* const address, char* const version, 
                                    char* const mode, char* const passwd, char* const uartSpeed);
-HC05_StatusType HC05_FixedAddr_MasterMode(void);
+HC05_StatusType HC05_fixedAddr_masterModeEnter(void);
+HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr);
 
 #endif //  HC05_H
