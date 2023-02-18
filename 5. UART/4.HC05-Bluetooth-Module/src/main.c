@@ -34,13 +34,14 @@
 
 struct btModule {
 
-	char  name [MAX_RESPONSE_LEN];
-	char  address [MAX_RESPONSE_LEN];
-	char  version [MAX_RESPONSE_LEN];
-	char  mode [MAX_RESPONSE_LEN];
-	char  password [MAX_RESPONSE_LEN];
+	char  name      [MAX_RESPONSE_LEN];
+	char  address   [MAX_RESPONSE_LEN];
+	char  version   [MAX_RESPONSE_LEN];
+	char  mode      [MAX_RESPONSE_LEN];
+	char  state     [MAX_RESPONSE_LEN];
+	char  password  [MAX_RESPONSE_LEN];
 	char  uartSpeed [MAX_RESPONSE_LEN];
-
+	
 } hc05_master;
 
 
