@@ -39,5 +39,7 @@ HC05_StatusType HC05_getModuleInfo(char* const name, char* const address, char* 
                                    char* const mode, char* const passwd, char* const uartSpeed);
 HC05_StatusType HC05_fixedAddr_masterModeEnter(void);
 HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr);
+HC05_StatusType HC05_slaveModeEnter(void);
+HC05_StatusType HC05_getModuleState(char* const state);
 
 #endif //  HC05_H

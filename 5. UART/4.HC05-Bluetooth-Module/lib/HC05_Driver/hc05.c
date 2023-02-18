@@ -205,5 +205,67 @@ HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr)
     return HC05_OK;
 }
 
-HC05_StatusType HC05_slaveModeEnter(void){}
-HC05_StatusType HC05_getModuleState(void){}
+
+
+HC05_StatusType HC05_slaveModeEnter(void)
+{
+    char txMsg[MAX_COMMAND_LEN];
+    char rxMsg[MAX_RESPONSE_LEN];
+
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    memset(rxMsg, 0, MAX_RESPONSE_LEN);
+
+    strcpy(txMsg, "AT+RMAAD\r\n");
+    /*using HAL_MAX_DELAY , response size is known , function will return after getting fixed no. of bytes
+    program will not hangup here as long as we got response of that size*/
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
+
+    if (strncmp(rxMsg, "OK", 2) != 0){
+        return HC05_FAIL;
+    }
+
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    strcpy(txMsg, "AT+ROLE=0\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
+
+    if (strncmp(rxMsg, "OK", 2) != 0){
+        return HC05_FAIL;
+    }
+   
+
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    strcpy(txMsg, "AT+CMODE=1\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
+
+    if (strncmp(rxMsg, "OK", 2) != 0){
+        return HC05_FAIL;
+    }
+    
+    return HC05_OK;
+}
+
+
+HC05_StatusType HC05_getModuleState(char* const state)
+{
+    char txMsg[MAX_COMMAND_LEN];
+    char rxMsg[MAX_RESPONSE_LEN];
+    uint8_t index = 0;
+
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    memset(rxMsg, 0, MAX_RESPONSE_LEN);
+
+    strcpy(txMsg, "AT+STATE?\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, sizeof(rxMsg),  MAX_HC05_DELAY);
+
+   
+    while (rxMsg[index] != '\0'){index++;}
+    if (rxMsg[index-4] != 'O' || rxMsg[index-3] != 'K'){
+        return HC05_FAIL;
+    }
+    strncpy(state, rxMsg, MAX_RESPONSE_LEN);
+    return HC05_OK;
+}
