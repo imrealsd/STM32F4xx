@@ -21,16 +21,16 @@
  *    AT + RESET or Power Reset to go-back to data communication mode
  * 
  * 2. Normal powering on : boot into data mode 
- * 
- * 3. MASTER -> 'CMODE' = 0 : 
- *    SLAVE ->  'CMODE' = 1:
- *    connect to provided fix slave address using 'BIND' 
- * 
- * 4. MASTER -> 'CMODE' = 1 :
- *    SLAVE  -> 'CMODE' = 1 :  
- *    connect to any address by SPP 'INIT' -> 'INQ' -> 'RNAME' -> 'PAIR' -> 'LINK' [master side]
- *    SPP INIT -> STATE-PARIABLE -> STATE-PAIRED -> STATE-CONNECTED [slave side]
- * 
+ *                                                                        _
+ * 3. MASTER -> 'CMODE' = 0 , ROLE = 1:                                    |
+ *    SLAVE ->  'CMODE' = 1,  ROLW = 0:                                    |-- Quick Connect
+ *    connect to provided fix slave address using 'BIND'                  _|
+ *                                                                                                     _
+ * 4. MASTER -> 'CMODE' = 1 , ROLE = 1:                                                                 |
+ *    SLAVE  -> 'CMODE' = 1 , ROLE = 0:                                                                 |
+ *    connect to any address by SPP 'INIT' -> 'INQ' -> 'RNAME' -> 'PAIR' -> 'LINK' [master side]        |-- Scan Connect
+ *    SPP INIT -> STATE-PARIABLE -> STATE-PAIRED -> STATE-CONNECTED [slave side]                       _|
+ *                                                                                                  
  * 5. Master & Slave password have be same in-oder to connect / pair
 */
 
