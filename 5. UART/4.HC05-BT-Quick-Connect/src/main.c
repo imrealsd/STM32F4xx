@@ -63,8 +63,9 @@ int main(void)
 	MX_USART2_UART_Init();
 
 	test_hc05LibraryFunctions();
+	//HC05_backToDefaultMode();
 
-	while (1);
+	while (1) {}
 }
 
 
@@ -96,8 +97,12 @@ static void test_hc05LibraryFunctions(void)
 		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered Fixed Address Master Mode\r\n", 40 , HAL_MAX_DELAY);
 	}
 
-	if (HC05_fixedAddr_masterModeBind((char* const) "1234,56,abcdef\r\n") == HC05_OK){
+	if (HC05_fixedAddr_masterModeBind((char* const) "6882,67,530253\r\n") == HC05_OK){
 		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Binded to Provided Slave Address\r\n", 39, HAL_MAX_DELAY);
+	}
+
+	if (HC05_getModuleState((char* const) &hc05_master.state) == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.state, strlen(hc05_master.state), HAL_MAX_DELAY);
 	}
 }
 
