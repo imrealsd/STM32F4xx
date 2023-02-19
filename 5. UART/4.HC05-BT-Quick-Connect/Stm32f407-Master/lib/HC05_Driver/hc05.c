@@ -11,7 +11,7 @@
 /**
  * MCU VCC   : HC05 VCC
  * MCU GND   : HC05 GND
- * UART2     : stm32 to hc05 communication [baud rate 38400] 
+ * UART      : stm32 to hc05 communication [baud rate 38400] 
 */
 
 
@@ -59,9 +59,12 @@ HC05_StatusType HC05_backToDefaultMode(void)
 {   
     /**
      * ORGL / Default Mode:
+     * NAME = HC-05
      * ROLE  = 0 [slave]
-     * Key = "1234"
-     * Baud Rate = 38400
+     * CMODE = 0
+     * PASS-Key = "1234"
+     * Baud Rate [AT-CMD] = 38400
+     * Baud Rate [DATA] = 9600 [can be modified]
     */
     char txMsg[MAX_COMMAND_LEN];
     char rxMsg[MAX_RESPONSE_LEN];
@@ -291,3 +294,6 @@ HC05_StatusType HC05_getModuleState(char* const state)
     strncpy(state, rxMsg, MAX_RESPONSE_LEN);
     return HC05_OK;
 }
+
+
+HC05_StatusType HC05_powerReset(void){}
