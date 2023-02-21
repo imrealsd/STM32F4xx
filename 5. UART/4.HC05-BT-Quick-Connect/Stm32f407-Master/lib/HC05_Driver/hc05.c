@@ -8,6 +8,9 @@
 
 #include "hc05.h"
 
+/*static functions*/
+void convertIntToString(char* str, int16_t num);
+
 /**
  * MCU VCC   : HC05 VCC
  * MCU GND   : HC05 GND
@@ -215,7 +218,8 @@ HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr)
 
     strcpy(txMsg, "AT+BIND=");
     strcat(txMsg, slaveAddr);
-    strcat(rxMsg,"\r\n");
+    strcat(txMsg,"\r\n");
+
     HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
     HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
 
@@ -296,4 +300,91 @@ HC05_StatusType HC05_getModuleState(char* const state)
 }
 
 
-HC05_StatusType HC05_powerReset(void){}
+HC05_StatusType HC05_powerReset(void)
+{
+    char txMsg[MAX_COMMAND_LEN];
+    char rxMsg[MAX_RESPONSE_LEN];
+    
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    memset(rxMsg, 0, MAX_RESPONSE_LEN);
+
+    strcpy(txMsg, "AT+RESET\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
+
+    if (strncmp(rxMsg, "OK", 2) == 0){
+        return HC05_OK;
+    }
+    return HC05_FAIL;
+}
+
+
+HC05_StatusType HC05_setUartSpeed(int16_t baudRate)
+{
+    char txMsg[MAX_COMMAND_LEN];
+    char rxMsg[MAX_RESPONSE_LEN];
+    char speed[7];
+    
+    convertIntToString(speed, baudRate);
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    memset(rxMsg, 0, MAX_RESPONSE_LEN);
+
+    strcpy(txMsg, "AT+UART=\r\n");
+    strcat(txMsg, speed);
+    strcat(txMsg,"\r\n");
+
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
+
+    if (strncmp(rxMsg, "OK", 2) == 0){
+        return HC05_OK;
+    }
+    return HC05_FAIL;
+}
+
+
+
+HC05_StatusType HC05_getBindedAddress(char *bindAddr)
+{
+    char txMsg[MAX_COMMAND_LEN];
+    char rxMsg[MAX_RESPONSE_LEN];
+    uint8_t index;
+    
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    memset(rxMsg, 0, MAX_RESPONSE_LEN);
+
+    strcpy(txMsg, "AT+BIND?\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, sizeof(rxMsg),  MAX_HC05_DELAY);
+
+    index = 0;
+        while (rxMsg[index] != '\0'){index++;}
+        if (rxMsg[index-4] != 'O' || rxMsg[index-3] != 'K')
+            return HC05_FAIL;
+    return HC05_OK;
+}
+
+
+
+
+
+/***** Private functions *******/
+
+void convertIntToString(char* str, int16_t num)
+{
+    int8_t d0 = (num  % 10);
+    int8_t d1 = ((num / 10) % 10);
+    int8_t d2 = ((num / 100) % 10);
+    int8_t d3 = ((num / 1000) % 10);
+    int8_t d4 = ((num / 10000) % 10);
+    int8_t d5 = ((num / 100000) % 10);
+    int8_t d6 = ((num / 1000000) % 10);
+
+    str[0] = d6 + 48;
+    str[1] = d5 + 48;
+    str[2] = d4 + 48;
+    str[3] = d3 + 48;
+    str[4] = d2 + 48;
+    str[5] = d1 + 48;
+    str[6] = d0 + 48;
+}

@@ -41,5 +41,8 @@ HC05_StatusType HC05_fixedAddr_masterModeEnter(void);
 HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr);
 HC05_StatusType HC05_slaveModeEnter(void);
 HC05_StatusType HC05_getModuleState(char* const state);
+HC05_StatusType HC05_powerReset(void);
+HC05_StatusType HC05_getBindedAddress(char* bindAddr);
+HC05_StatusType HC05_setUartSpeed(int16_t baudRate);
 
 #endif //  HC05_H
