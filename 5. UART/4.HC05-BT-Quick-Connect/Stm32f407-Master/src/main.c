@@ -34,20 +34,21 @@
 
 struct btModule {
 
-	char  name      [MAX_RESPONSE_LEN];
-	char  address   [MAX_RESPONSE_LEN];
-	char  version   [MAX_RESPONSE_LEN];
-	char  mode      [MAX_RESPONSE_LEN];
-	char  state     [MAX_RESPONSE_LEN];
-	char  password  [MAX_RESPONSE_LEN];
-	char  uartSpeed [MAX_RESPONSE_LEN];
+	char name       [MAX_RESPONSE_LEN];
+	char address    [MAX_RESPONSE_LEN];
+	char version    [MAX_RESPONSE_LEN];
+	char mode       [MAX_RESPONSE_LEN];
+	char state      [MAX_RESPONSE_LEN];
+	char password   [MAX_RESPONSE_LEN];
+	char uartSpeed  [MAX_RESPONSE_LEN];
+	char bindedAddr [MAX_RESPONSE_LEN];
 	
 } hc05_master;
 
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void test_hc05LibraryFunctions(void);
+static void masterAndBindConfig(void);
 
 
 /**
@@ -61,23 +62,26 @@ int main(void)
 	MX_GPIO_Init();
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
-
-	test_hc05LibraryFunctions();
-	//HC05_backToDefaultMode();
+	
+	masterAndBindConfig();
 
 	while (1) {}
 }
 
 
 /**
- * @brief  test hc05 library functions
+ * @brief  enter master mode & bind to slave address
  * @retval none
  */
-static void test_hc05LibraryFunctions(void)
+static void masterAndBindConfig(void)
 {
 	
 	if (HC05_verifyATMode() == HC05_OK){
 		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Powered Up into AT mode\r\n", 30, HAL_MAX_DELAY);
+	}
+
+	if (HC05_setUartSpeed((uint16_t) 38400) == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Set uart data baud-rate to 38400\r\n", 39, HAL_MAX_DELAY);
 	}
 
 	if (HC05_getModuleInfo((char* const ) &hc05_master.name ,(char* const ) &hc05_master.address,
@@ -97,12 +101,14 @@ static void test_hc05LibraryFunctions(void)
 		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered Fixed Address Master Mode\r\n", 40 , HAL_MAX_DELAY);
 	}
 
-	if (HC05_fixedAddr_masterModeBind((char* const) "6882,67,530253\r\n") == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Binded to Provided Slave Address\r\n", 39, HAL_MAX_DELAY);
+	/*bind to hc05-slave module address [0022:04:010E2D]*/
+	if (HC05_fixedAddr_masterModeBind((char* const) "0022,04,010E2D") == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Binded to Provided Slave Address:\r\n", 40, HAL_MAX_DELAY);
 	}
 
-	if (HC05_getModuleState((char* const) &hc05_master.state) == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.state, strlen(hc05_master.state), HAL_MAX_DELAY);
+
+	if (HC05_getBindedAddress((char* const) &hc05_master.bindedAddr) == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.bindedAddr, strlen(hc05_master.bindedAddr), HAL_MAX_DELAY);
 	}
 }
 
@@ -146,6 +152,8 @@ void SystemClock_Config(void)
 		Error_Handler();
 	}
 }
+
+
 
 /**
  * @brief  This function is executed in case of error occurrence.
