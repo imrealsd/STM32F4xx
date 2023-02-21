@@ -9,7 +9,7 @@
 #include "hc05.h"
 
 /*static functions*/
-void convertIntToString(char* str, int16_t num);
+void convertIntToString(char* str, uint16_t num);
 
 /**
  * MCU VCC   : HC05 VCC
@@ -217,7 +217,7 @@ HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr)
     memset(rxMsg, 0, MAX_RESPONSE_LEN);
 
     strcpy(txMsg, "AT+BIND=");
-    strcat(txMsg, slaveAddr);
+    strncat(txMsg, slaveAddr, 14);
     strcat(txMsg,"\r\n");
 
     HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
@@ -276,7 +276,9 @@ HC05_StatusType HC05_slaveModeEnter(void)
 }
 
 
-
+/**
+ * @note send AT+INIT before calling this function
+*/
 HC05_StatusType HC05_getModuleState(char* const state)
 {
     char txMsg[MAX_COMMAND_LEN];
@@ -319,7 +321,7 @@ HC05_StatusType HC05_powerReset(void)
 }
 
 
-HC05_StatusType HC05_setUartSpeed(int16_t baudRate)
+HC05_StatusType HC05_setUartSpeed(uint16_t baudRate)
 {
     char txMsg[MAX_COMMAND_LEN];
     char rxMsg[MAX_RESPONSE_LEN];
@@ -329,9 +331,9 @@ HC05_StatusType HC05_setUartSpeed(int16_t baudRate)
     memset(txMsg, 0, MAX_COMMAND_LEN);
     memset(rxMsg, 0, MAX_RESPONSE_LEN);
 
-    strcpy(txMsg, "AT+UART=\r\n");
-    strcat(txMsg, speed);
-    strcat(txMsg,"\r\n");
+    strcpy(txMsg, "AT+UART=");
+    strncat(txMsg, speed, 7);
+    strncat(txMsg,",0,0\r\n", 6);
 
     HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
     HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
@@ -344,7 +346,7 @@ HC05_StatusType HC05_setUartSpeed(int16_t baudRate)
 
 
 
-HC05_StatusType HC05_getBindedAddress(char *bindAddr)
+HC05_StatusType HC05_getBindedAddress(char* const bindAddr)
 {
     char txMsg[MAX_COMMAND_LEN];
     char rxMsg[MAX_RESPONSE_LEN];
@@ -361,6 +363,8 @@ HC05_StatusType HC05_getBindedAddress(char *bindAddr)
         while (rxMsg[index] != '\0'){index++;}
         if (rxMsg[index-4] != 'O' || rxMsg[index-3] != 'K')
             return HC05_FAIL;
+
+    strncpy(bindAddr, rxMsg, MAX_RESPONSE_LEN);
     return HC05_OK;
 }
 
@@ -370,7 +374,7 @@ HC05_StatusType HC05_getBindedAddress(char *bindAddr)
 
 /***** Private functions *******/
 
-void convertIntToString(char* str, int16_t num)
+void convertIntToString(char* str, uint16_t num)
 {
     int8_t d0 = (num  % 10);
     int8_t d1 = ((num / 10) % 10);
