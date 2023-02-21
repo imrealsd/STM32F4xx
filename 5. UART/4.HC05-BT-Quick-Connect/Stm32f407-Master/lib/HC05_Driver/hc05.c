@@ -392,3 +392,7 @@ void convertIntToString(char* str, uint16_t num)
     str[5] = d1 + 48;
     str[6] = d0 + 48;
 }
+
+// TODO: 1. check HC05_getModuleState() function
+//       2. check HC05_slaveModeEnter() function
+//       2. add functions for scan-connect mode  [for both master & slave]
