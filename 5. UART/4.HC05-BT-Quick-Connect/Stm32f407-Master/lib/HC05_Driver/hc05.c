@@ -395,4 +395,5 @@ void convertIntToString(char* str, uint16_t num)
 
 // TODO: 1. check HC05_getModuleState() function
 //       2. check HC05_slaveModeEnter() function
-//       2. add functions for scan-connect mode  [for both master & slave]
+//       3. add   HC05_setModuleName() function
+//       4. add functions for scan-connect mode  [for both master & slave]
