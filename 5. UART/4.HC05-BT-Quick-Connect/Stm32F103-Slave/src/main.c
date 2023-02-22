@@ -48,7 +48,7 @@ struct btModule {
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void masterModeConfigs(void);
+static void slaveModeConfigs(void);
 
 
 /**
@@ -64,8 +64,8 @@ int main(void)
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
 	
-	/*Enter Master Mode, do necessary configs & Bind Slave Adddress*/
-	masterModeConfigs();
+	/*Enter Slave Mode, do necessary configs */
+	slaveModeConfigs();
 
 	while (1) {}
 }
@@ -75,15 +75,15 @@ int main(void)
  * @brief  enter master mode & bind to slave address
  * @retval none
  */
-static void masterModeConfigs(void)
+static void slaveModeConfigs(void)
 {
 	
 	if (HC05_verifyATMode() == HC05_OK){
 		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Powered Up into AT mode\r\n", 30, HAL_MAX_DELAY);
 	}
 
-	if (HC05_setModuleName((char* const) "Master-Module") == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Changed Module Name to \"Master Module\" \r\n", 46, HAL_MAX_DELAY);
+	if (HC05_setModuleName((char* const) "Slave-Module") == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Changed Module Name to \"Slave Module\" \r\n", 45, HAL_MAX_DELAY);
 	}
 
 	if (HC05_setUartSpeed((uint16_t) 38400) == HC05_OK){
@@ -101,21 +101,10 @@ static void masterModeConfigs(void)
 		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.mode,       strlen(hc05_master.mode), HAL_MAX_DELAY);
 		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.password,   strlen(hc05_master.password), HAL_MAX_DELAY);
 		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.uartSpeed,  strlen(hc05_master.uartSpeed), HAL_MAX_DELAY);
-
 	}
 
-	if (HC05_fixedAddr_masterModeEnter() == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered Fixed Address Master Mode\r\n", 40 , HAL_MAX_DELAY);
-	}
-
-	/*bind to hc05-slave module address [0022:04:010E2D]*/
-	if (HC05_fixedAddr_masterModeBind((char* const) "0022,04,010E2D") == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Binded to Provided Slave Address:\r\n", 40, HAL_MAX_DELAY);
-	}
-
-
-	if (HC05_getBindedAddress((char* const) &hc05_master.bindedAddr) == HC05_OK){
-		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.bindedAddr, strlen(hc05_master.bindedAddr), HAL_MAX_DELAY);
+	if (HC05_slaveModeEnter() == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Entered Slave Mode\r\n", 25 , HAL_MAX_DELAY);
 	}
 }
 
