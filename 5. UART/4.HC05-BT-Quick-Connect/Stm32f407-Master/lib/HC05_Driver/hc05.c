@@ -9,7 +9,7 @@
 #include "hc05.h"
 
 /*static functions*/
-void convertIntToString(char* str, uint16_t num);
+static void convertIntToString(char* str, uint16_t num);
 
 /**
  * MCU VCC   : HC05 VCC
@@ -276,6 +276,30 @@ HC05_StatusType HC05_slaveModeEnter(void)
 }
 
 
+HC05_StatusType HC05_initSppProfile(void)
+{   
+    /**
+     * In some modules the spp is initialised automatically & calling this func will give ERROR[0]
+     * So modeling as : any response is a success [ok / ERROR[0]] , except 'FAIL'
+    */
+    char txMsg[MAX_COMMAND_LEN];
+    char rxMsg[MAX_RESPONSE_LEN];
+
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    memset(rxMsg, 0, MAX_RESPONSE_LEN);
+
+    strcpy(txMsg, "AT+INIT\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  MAX_HC05_DELAY);
+
+    if (strncmp(rxMsg, "FAIL", 4) == 0){
+        return HC05_FAIL;
+    }
+    return HC05_OK;
+}
+
+
+
 /**
  * @note send AT+INIT before calling this function
 */
@@ -319,6 +343,29 @@ HC05_StatusType HC05_powerReset(void)
     }
     return HC05_FAIL;
 }
+
+
+HC05_StatusType HC05_setModuleName(char* const name)
+{
+    char txMsg[MAX_COMMAND_LEN];
+    char rxMsg[MAX_RESPONSE_LEN];
+    
+    memset(txMsg, 0, MAX_COMMAND_LEN);
+    memset(rxMsg, 0, MAX_RESPONSE_LEN);
+
+    strcpy(txMsg, "AT+NAME=");
+    strcat(txMsg, name);
+    strncat(txMsg, "\r\n", 2);
+    
+    HAL_UART_Transmit(&huart2, (uint8_t *) txMsg, strlen(txMsg), HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart2, (uint8_t *) rxMsg, OK_RESPONSE_LEN,  HAL_MAX_DELAY);
+
+    if (strncmp(rxMsg, "OK", 2) == 0){
+        return HC05_OK;
+    }
+    return HC05_FAIL;
+}
+
 
 
 HC05_StatusType HC05_setUartSpeed(uint16_t baudRate)
@@ -374,8 +421,13 @@ HC05_StatusType HC05_getBindedAddress(char* const bindAddr)
 
 /***** Private functions *******/
 
-void convertIntToString(char* str, uint16_t num)
-{
+static void convertIntToString(char* str, uint16_t num)
+{   
+    /**
+     * Max baudrate is 7 digits
+     * current implementation of this func. is a bit ugly but working fine
+     * will implement this nicely with loops , later
+    */
     int8_t d0 = (num  % 10);
     int8_t d1 = ((num / 10) % 10);
     int8_t d2 = ((num / 100) % 10);
@@ -393,7 +445,6 @@ void convertIntToString(char* str, uint16_t num)
     str[6] = d0 + 48;
 }
 
-// TODO: 1. check HC05_getModuleState() function
-//       2. check HC05_slaveModeEnter() function
-//       3. add   HC05_setModuleName() function
-//       4. add functions for scan-connect mode  [for both master & slave]
+
+
+// TODO: 1. add functions for scan-connect mode  [for both master & slave]

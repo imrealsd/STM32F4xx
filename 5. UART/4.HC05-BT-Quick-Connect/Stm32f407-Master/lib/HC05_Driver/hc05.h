@@ -43,6 +43,8 @@ HC05_StatusType HC05_slaveModeEnter(void);
 HC05_StatusType HC05_getModuleState(char* const state);
 HC05_StatusType HC05_powerReset(void);
 HC05_StatusType HC05_getBindedAddress(char* const bindAddr);
-HC05_StatusType HC05_setUartSpeed(uint16_t baudRate);
+HC05_StatusType HC05_setUartSpeed(uint16_t uartSpeed);
+HC05_StatusType HC05_initSppProfile(void);
+HC05_StatusType HC05_setModuleName(char* const name);
 
 #endif //  HC05_H
