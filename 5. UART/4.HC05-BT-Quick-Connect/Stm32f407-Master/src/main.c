@@ -48,7 +48,7 @@ struct btModule {
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void masterAndBindConfig(void);
+static void masterModeConfigs(void);
 
 
 /**
@@ -57,13 +57,15 @@ static void masterAndBindConfig(void);
  */
 int main(void)
 {	
+	/*Initialise all Drivers*/
 	HAL_Init();
 	SystemClock_Config();
 	MX_GPIO_Init();
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
 	
-	masterAndBindConfig();
+	/*Enter Master Mode, do necessary configs & Bind Slave Adddress*/
+	masterModeConfigs();
 
 	while (1) {}
 }
@@ -73,11 +75,15 @@ int main(void)
  * @brief  enter master mode & bind to slave address
  * @retval none
  */
-static void masterAndBindConfig(void)
+static void masterModeConfigs(void)
 {
 	
 	if (HC05_verifyATMode() == HC05_OK){
 		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Powered Up into AT mode\r\n", 30, HAL_MAX_DELAY);
+	}
+
+	if (HC05_setModuleName((char* const) "Master-Module") == HC05_OK){
+		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Changed Module Name to \"Master Module\" \r\n", 46, HAL_MAX_DELAY);
 	}
 
 	if (HC05_setUartSpeed((uint16_t) 38400) == HC05_OK){
@@ -85,7 +91,8 @@ static void masterAndBindConfig(void)
 	}
 
 	if (HC05_getModuleInfo((char* const ) &hc05_master.name ,(char* const ) &hc05_master.address,
-		(char* const) &hc05_master.version,(char* const ) &hc05_master.mode, (char* const)&hc05_master.password, (char* const)&hc05_master.uartSpeed) == HC05_OK){
+		(char* const) &hc05_master.version,(char* const ) &hc05_master.mode, 
+		(char* const)&hc05_master.password, (char* const)&hc05_master.uartSpeed) == HC05_OK){
 
 		HAL_UART_Transmit(&huart1, (uint8_t *)"[+] Module Information :\r\n", 27, HAL_MAX_DELAY);
 		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.name,       strlen(hc05_master.name), HAL_MAX_DELAY);
@@ -111,6 +118,7 @@ static void masterAndBindConfig(void)
 		HAL_UART_Transmit(&huart1, (uint8_t *) &hc05_master.bindedAddr, strlen(hc05_master.bindedAddr), HAL_MAX_DELAY);
 	}
 }
+
 
 
 /**
