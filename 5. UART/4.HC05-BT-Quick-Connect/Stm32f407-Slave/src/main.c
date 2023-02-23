@@ -67,6 +67,9 @@ int main(void)
 	/*Enter Slave Mode, do necessary configs */
 	slaveModeConfigs();
 
+	/*leave at mode & enter data mode */
+	HC05_powerReset();
+
 	while (1) {}
 }
 

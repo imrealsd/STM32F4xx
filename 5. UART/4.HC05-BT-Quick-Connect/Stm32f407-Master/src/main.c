@@ -66,6 +66,9 @@ int main(void)
 	
 	/*Enter Master Mode, do necessary configs & Bind Slave Adddress*/
 	masterModeConfigs();
+	
+	/*leave at mode & enter data mode */
+	HC05_powerReset();
 
 	while (1) {}
 }
