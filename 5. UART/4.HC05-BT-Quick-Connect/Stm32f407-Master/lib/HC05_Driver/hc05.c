@@ -26,15 +26,16 @@ static void convertIntToString(char* str, uint16_t num);
  * 2. Normal powering on : boot into data mode 
  *                                                                        _
  * 3. MASTER -> 'CMODE' = 0 , ROLE = 1:                                    |
- *    SLAVE ->  'CMODE' = 1,  ROLW = 0:                                    |-- Quick Connect
- *    connect to provided fix slave address using 'BIND'                  _|
+ *    SLAVE ->  'CMODE' = 1,  ROLW = 0:                                    |-- Quick Connect 
+ *    connect to provided fix slave address using 'BIND',then power reset _|  [conection built in data mode after leaving at mode]
  *                                                                                                     _
  * 4. MASTER -> 'CMODE' = 1 , ROLE = 1:                                                                 |
  *    SLAVE  -> 'CMODE' = 1 , ROLE = 0:                                                                 |
  *    connect to any address by SPP 'INIT' -> 'INQ' -> 'RNAME' -> 'PAIR' -> 'LINK' [master side]        |-- Scan Connect
- *    SPP INIT -> STATE-PARIABLE -> STATE-PAIRED -> STATE-CONNECTED [slave side]                       _|
- *                                                                                                  
+ *    SPP INIT -> STATE-PARIABLE -> STATE-PAIRED -> STATE-CONNECTED [slave side]                       _|   [connection built in at mode]
+ *                                                                                                         
  * 5. Master & Slave password have be same in-oder to connect / pair
+ * 6. This library only implements quick connect mode
 */
 
 
