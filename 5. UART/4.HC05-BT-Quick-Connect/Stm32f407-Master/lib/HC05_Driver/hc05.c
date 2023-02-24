@@ -38,7 +38,9 @@ static void convertIntToString(char* str, uint16_t num);
  * 6. This library only implements quick connect mode
 */
 
-
+/**
+ * @brief verify at mode 
+ */
 HC05_StatusType HC05_verifyATMode(void)
 {
     char txMsg[MAX_COMMAND_LEN];
@@ -58,7 +60,9 @@ HC05_StatusType HC05_verifyATMode(void)
 } 
 
 
-
+/**
+ * @brief perform a factory reset 
+ */
 HC05_StatusType HC05_backToDefaultMode(void)
 {   
     /**
@@ -87,7 +91,9 @@ HC05_StatusType HC05_backToDefaultMode(void)
 }
 
 
-
+/**
+ * @brief get module information
+ */
 HC05_StatusType HC05_getModuleInfo(char* const name, char* const address, 
                 char* const version, char* const mode, char* const passwd, char* const uartSpeed)
 {   
@@ -157,8 +163,9 @@ HC05_StatusType HC05_getModuleInfo(char* const name, char* const address,
     return HC05_OK;
 }
 
-
-
+/**
+ * @brief module as master [will connect to a fixed address (slave) ]
+ */
 HC05_StatusType HC05_fixedAddr_masterModeEnter(void)
 {   
     /**
@@ -205,6 +212,9 @@ HC05_StatusType HC05_fixedAddr_masterModeEnter(void)
 }
 
 
+/**
+ * @brief bind with the address in fixed address salve mode [will connect to the slave automatically when availbale]
+ */
 HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr)
 {   
     /**
@@ -231,7 +241,9 @@ HC05_StatusType HC05_fixedAddr_masterModeBind(char* const slaveAddr)
 }
 
 
-
+/**
+ * @brief configure module as slave device 
+ */
 HC05_StatusType HC05_slaveModeEnter(void)
 {   
     /**
@@ -277,6 +289,9 @@ HC05_StatusType HC05_slaveModeEnter(void)
 }
 
 
+/**
+ * initialise spp profile
+*/
 HC05_StatusType HC05_initSppProfile(void)
 {   
     /**
@@ -302,6 +317,7 @@ HC05_StatusType HC05_initSppProfile(void)
 
 
 /**
+ * @brief get bluetooth state [iniatilised, pairable, paired ..etc]
  * @note send AT+INIT before calling this function
 */
 HC05_StatusType HC05_getModuleState(char* const state)
@@ -326,7 +342,9 @@ HC05_StatusType HC05_getModuleState(char* const state)
     return HC05_OK;
 }
 
-
+/**
+ * @brief power reset [go back to data mode if booted into at mode] 
+ */
 HC05_StatusType HC05_powerReset(void)
 {
     char txMsg[MAX_COMMAND_LEN];
@@ -345,7 +363,9 @@ HC05_StatusType HC05_powerReset(void)
     return HC05_FAIL;
 }
 
-
+/**
+ * @brief set bluetooth module name 
+ */
 HC05_StatusType HC05_setModuleName(char* const name)
 {
     char txMsg[MAX_COMMAND_LEN];
@@ -368,7 +388,9 @@ HC05_StatusType HC05_setModuleName(char* const name)
 }
 
 
-
+/**
+ * @brief set uart data speed [baud rate] 
+ */
 HC05_StatusType HC05_setUartSpeed(uint16_t baudRate)
 {
     char txMsg[MAX_COMMAND_LEN];
@@ -393,7 +415,9 @@ HC05_StatusType HC05_setUartSpeed(uint16_t baudRate)
 }
 
 
-
+/**
+ * @brief function return the binded adddress 
+ */
 HC05_StatusType HC05_getBindedAddress(char* const bindAddr)
 {
     char txMsg[MAX_COMMAND_LEN];
