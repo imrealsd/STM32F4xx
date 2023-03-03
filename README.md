@@ -694,29 +694,53 @@ Programming STM32f407VE through registers using STM32F407xx dataseet & reference
 │   │   ├── test
 │   │   │   └── README
 │   │   └── upload.sh
-│   └── 4.HC05-Bluetooth-Module
-│       ├── include
-│       │   ├── gpio.h
-│       │   ├── main.h
-│       │   ├── README
-│       │   ├── stm32f4xx_hal_conf.h
-│       │   ├── stm32f4xx_it.h
-│       │   └── usart.h
-│       ├── lib
-│       │   ├── HC05_Driver
-│       │   │   ├── hc05.c
-│       │   │   └── hc05.h
-│       │   └── README
-│       ├── platformio.ini
-│       ├── src
-│       │   ├── gpio.c
-│       │   ├── main.c
-│       │   ├── stm32f4xx_hal_msp.c
-│       │   ├── stm32f4xx_it.c
-│       │   ├── system_stm32f4xx.c
-│       │   └── usart.c
-│       └── test
-│           └── README
+│   └── 4.HC05-BT-Quick-Connect
+│       ├── Stm32f407-Master
+│       │   ├── include
+│       │   │   ├── gpio.h
+│       │   │   ├── main.h
+│       │   │   ├── README
+│       │   │   ├── stm32f4xx_hal_conf.h
+│       │   │   ├── stm32f4xx_it.h
+│       │   │   └── usart.h
+│       │   ├── lib
+│       │   │   ├── HC05_Driver
+│       │   │   │   ├── hc05.c
+│       │   │   │   └── hc05.h
+│       │   │   └── README
+│       │   ├── platformio.ini
+│       │   ├── src
+│       │   │   ├── gpio.c
+│       │   │   ├── main.c
+│       │   │   ├── stm32f4xx_hal_msp.c
+│       │   │   ├── stm32f4xx_it.c
+│       │   │   ├── system_stm32f4xx.c
+│       │   │   └── usart.c
+│       │   └── test
+│       │       └── README
+│       └── Stm32f407-Slave
+│           ├── include
+│           │   ├── gpio.h
+│           │   ├── main.h
+│           │   ├── README
+│           │   ├── stm32f4xx_hal_conf.h
+│           │   ├── stm32f4xx_it.h
+│           │   └── usart.h
+│           ├── lib
+│           │   ├── HC05_Driver
+│           │   │   ├── hc05.c
+│           │   │   └── hc05.h
+│           │   └── README
+│           ├── platformio.ini
+│           ├── src
+│           │   ├── gpio.c
+│           │   ├── main.c
+│           │   ├── stm32f4xx_hal_msp.c
+│           │   ├── stm32f4xx_it.c
+│           │   ├── system_stm32f4xx.c
+│           │   └── usart.c
+│           └── test
+│               └── README
 ├── 6. I2C
 │   ├── 1. PCF874T-I2C
 │   │   ├── include
@@ -899,5 +923,6 @@ Programming STM32f407VE through registers using STM32F407xx dataseet & reference
 │       ├── ultrasonic.c
 │       └── ultrasonic.h
 └── README.md
+
 
 ```
