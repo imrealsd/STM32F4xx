@@ -1,6 +1,6 @@
-# STM32F407 Register Programming
+# STM32F407 Peripheral Programming
 
-Programming STM32f407VE through registers using STM32F407xx dataseet & reference manual
+Programming STM32f407VE through registers & HAL using STM32F407xx datasheet & reference manual
 
 # Contents :
 
