@@ -45,6 +45,12 @@ int main(void)
 	MX_DMA_Init();
 	MX_USART1_UART_Init();
 	
+	/**
+	 * DMA Direct Mode
+	 * No FIFO, NO BRUST
+	 * PSIZE = MSIZE
+	 */
+
 	/*Fill buffer with character 'X'*/
 	memset(buff, 'X', BUFF_SIZE);
 
