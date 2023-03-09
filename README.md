@@ -1,5 +1,4 @@
 # STM32F407 Peripheral Programming
-
 Programming STM32f407VE through registers & HAL using STM32F407xx datasheet & reference manual
 
 # Contents :
@@ -242,6 +241,71 @@ Programming STM32f407VE through registers & HAL using STM32F407xx datasheet & re
 │       └── Screenshot from 2023-01-27 19-31-10.png
 ├── 17.USB
 ├── 18.DMA
+│   ├── 1.UART-TX-DMA-DIRECT
+│   │   ├── include
+│   │   │   ├── dma.h
+│   │   │   ├── gpio.h
+│   │   │   ├── main.h
+│   │   │   ├── README
+│   │   │   ├── stm32f4xx_hal_conf.h
+│   │   │   ├── stm32f4xx_it.h
+│   │   │   └── usart.h
+│   │   ├── lib
+│   │   │   └── README
+│   │   ├── platformio.ini
+│   │   ├── src
+│   │   │   ├── dma.c
+│   │   │   ├── gpio.c
+│   │   │   ├── main.c
+│   │   │   ├── stm32f4xx_hal_msp.c
+│   │   │   ├── stm32f4xx_it.c
+│   │   │   ├── system_stm32f4xx.c
+│   │   │   └── usart.c
+│   │   └── test
+│   │       └── README
+│   ├── 2.UART-TX-DMA-FIFO
+│   │   ├── include
+│   │   │   ├── dma.h
+│   │   │   ├── gpio.h
+│   │   │   ├── main.h
+│   │   │   ├── README
+│   │   │   ├── stm32f4xx_hal_conf.h
+│   │   │   ├── stm32f4xx_it.h
+│   │   │   └── usart.h
+│   │   ├── lib
+│   │   │   └── README
+│   │   ├── platformio.ini
+│   │   ├── src
+│   │   │   ├── dma.c
+│   │   │   ├── gpio.c
+│   │   │   ├── main.c
+│   │   │   ├── stm32f4xx_hal_msp.c
+│   │   │   ├── stm32f4xx_it.c
+│   │   │   ├── system_stm32f4xx.c
+│   │   │   └── usart.c
+│   │   └── test
+│   │       └── README
+│   └── 3.UART-RX-DMA-FIFO-BRUST
+│       ├── include
+│       │   ├── dma.h
+│       │   ├── gpio.h
+│       │   ├── main.h
+│       │   ├── stm32f4xx_hal_conf.h
+│       │   ├── stm32f4xx_it.h
+│       │   └── usart.h
+│       ├── lib
+│       │   └── README
+│       ├── platformio.ini
+│       ├── src
+│       │   ├── dma.c
+│       │   ├── gpio.c
+│       │   ├── main.c
+│       │   ├── stm32f4xx_hal_msp.c
+│       │   ├── stm32f4xx_it.c
+│       │   ├── system_stm32f4xx.c
+│       │   └── usart.c
+│       └── test
+│           └── README
 ├── 19.SDIO
 │   └── SDIO-Fatfs
 │       ├── include
