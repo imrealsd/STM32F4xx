@@ -43,7 +43,8 @@ int main(void)
     MX_USART1_UART_Init();
 
     /**
-     * FIFO Mode [FIFO tola size (4*32) bit = 16 byte]
+     * DMA Memory to Peripheral Transfer
+     * FIFO Mode [FIFO tolal size (4*32) bit = 16 byte]
      * FIFO Thresold = 1/4 = 4 byte
      * FIFO will fire only after 4 byte is full & at the end the remaining data (flush)
      * 
