@@ -1,8 +1,6 @@
 # STM32F407 Peripheral Programming
 Programming STM32f407VE through registers & HAL using STM32F407xx datasheet & reference manual
 
-# Contents :
-
 ```bash
 
 ├── 10. EXT INTERRUPT
