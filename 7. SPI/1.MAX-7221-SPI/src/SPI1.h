@@ -5,5 +5,5 @@
 void setup_SPI1(void);
 void cs_Enable(void);
 void cs_Disable(void);
-void send_SPI1_16bit(int16_t);
+void send_SPI1_16bit(uint16_t);
 #endif 
