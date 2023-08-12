@@ -6,7 +6,9 @@ static float AHT21B_convertRawHumidity(uint32_t* pRawHumidity);
 static float AHT21B_convertRawTemparature(uint32_t* pRawTemparature);
 static void AHT21B_getRawValue(uint32_t* pRawTemparature, uint32_t* pRawHumidity);
 
-
+/**
+ * @brief check status of AHT21B 
+*/
 void AHT21B_setup(void)
 {   
     uint8_t txData  = CMD_GET_STATUS;
@@ -20,7 +22,9 @@ void AHT21B_setup(void)
     }
 }
 
-
+/**
+ * @brief read Temparature from AHT21B
+*/
 float AHT21B_getTemparature(void)
 {
     uint32_t rawTemp  = 0;
@@ -32,7 +36,9 @@ float AHT21B_getTemparature(void)
     return celciusTemp;
 }
 
-
+/**
+ * @brief read Humidity from AHT21B
+*/
 float AHT21B_getHumidity(void)
 {
     uint32_t rawTemp = 0;
@@ -44,7 +50,9 @@ float AHT21B_getHumidity(void)
     return humidity;
 }   
 
-
+/**
+ * @brief read raw values of Temparature & Humidity from AHT21B
+*/
 static void AHT21B_getRawValue(uint32_t* pRawTemparature, uint32_t* pRawHumidity)
 {
     uint8_t  txBuff[SIZE_TRIG_CONV_CMD];
@@ -64,39 +72,47 @@ static void AHT21B_getRawValue(uint32_t* pRawTemparature, uint32_t* pRawHumidity
     HAL_Delay(80);
     HAL_I2C_Master_Transmit(&hi2c1, AHT21B_ADDRESS, txBuff, 1, HAL_MAX_DELAY);
     HAL_I2C_Master_Receive(&hi2c1, AHT21B_ADDRESS, rxBuff, 1, HAL_MAX_DELAY);
-    if ((rxBuff[0] & (1 << 7)) != 0x00) {
+    if ((rxBuff[0] & (1 << (ONE_BYTE-1))) != 0x00) {
         goto WAIT_FOR_CONVERSION;
     }
 
     memset(rxBuff, 0, SIZE_SESNOR_DATA);
     HAL_I2C_Master_Receive(&hi2c1, AHT21B_ADDRESS, rxBuff, SIZE_SESNOR_DATA, HAL_MAX_DELAY);
     
-    rawTemparature  = (uint32_t) rxBuff[1];
-    rawTemparature  = (rawTemparature << ONE_BYTE);
-    rawTemparature |= (uint32_t) rxBuff[2];
-    rawTemparature  = (rawTemparature << ONE_NIBBLE);
-    rawTemparature |= (uint32_t) ((UPPER_NIBBLE & rxBuff[3]) >> ONE_NIBBLE);
-    *pRawTemparature = rawTemparature;
-
-    rawHumidity  = (uint32_t) (LOWER_NIBBLE & rxBuff[3]);
+    rawHumidity  = (uint32_t) rxBuff[1];
     rawHumidity  = (rawHumidity << ONE_BYTE);
-    rawHumidity |= (uint32_t) rxBuff[4];
-    rawHumidity  = (rawHumidity << ONE_BYTE);
-    rawHumidity |= (uint32_t) rxBuff[5];
+    rawHumidity |= (uint32_t) rxBuff[2];
+    rawHumidity  = (rawHumidity << ONE_NIBBLE);
+    rawHumidity |= (uint32_t) ((UPPER_NIBBLE & rxBuff[3]) >> ONE_NIBBLE);
     *pRawHumidity = rawHumidity;
+
+    rawTemparature  = (uint32_t) (LOWER_NIBBLE & rxBuff[3]);
+    rawTemparature  = (rawTemparature << ONE_BYTE);
+    rawTemparature |= (uint32_t) rxBuff[4];
+    rawTemparature  = (rawTemparature << ONE_BYTE);
+    rawTemparature |= (uint32_t) rxBuff[5];
+    *pRawTemparature = rawTemparature;
 }
 
+
+/**
+ * @brief convert raw temparature value to celcius value
+*/
 static float AHT21B_convertRawTemparature(uint32_t* pRawTemparature)
 {
     float celciusTemp;
-    celciusTemp = (((float)(*pRawTemparature) / (float) pow(2, 20)) * 200) - 50;
+    celciusTemp = (float)(*pRawTemparature) / (float) pow(2, 20);
+    celciusTemp = (celciusTemp * 200)  - 50;
     return celciusTemp;
 }
 
-
+/**
+ * @brief convert raw humidity value to percentage value
+*/
 static float AHT21B_convertRawHumidity(uint32_t* pRawHumidity)
 {
     float humidity;
-    humidity = (((float)(*pRawHumidity) / (float) pow(2, 20)) * 100);
+    humidity = (float)(*pRawHumidity) / (float) pow(2, 20);
+    humidity = (humidity * 100);
     return humidity;
 }
