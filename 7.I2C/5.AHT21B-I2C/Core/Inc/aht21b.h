@@ -32,14 +32,14 @@ void AHT21B_setup(void);
 /**
  * @brief  get humidity value AHT21B
  * @param  None
- * @retval None
+ * @retval float 
  */ 
 float AHT21B_getHumidity(void);
 
 /**
  * @brief  get temparature value from AHT21B
  * @param  None
- * @retval None
+ * @retval float
  */ 
 float AHT21B_getTemparature(void);
 
