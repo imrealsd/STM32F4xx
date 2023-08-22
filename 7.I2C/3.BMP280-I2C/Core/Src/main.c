@@ -48,9 +48,9 @@ int main(void)
   bmp280_init();
   
   while (1) {
-    sensor.altitude = bmp280_getaltitude();
-    sensor.pressure  = bmp280_getpressure();
-    sensor.temparature = bmp280_gettemperature();
+    sensor.altitude = bmp280_get_altitude();
+    sensor.pressure  = bmp280_get_pressure();
+    sensor.temparature = bmp280_get_temperature();
     HAL_Delay(5000);
   }
 }
