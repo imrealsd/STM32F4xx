@@ -1,9 +1,22 @@
+/***********************************************************************
+* File: bmp280.c
+*
+* Description: Implementation of bmp280 library functions.
+*
+* Dependencies: "I2C.h" & "stm32f4xx_hal.h" provided  by STMicroelectronics.
+*				<string.h>, <math.h> C standard libraries. 
+*
+* Author: Subhadeep Dhang
+*
+* Date: August 22, 2023
+************************************************************************/
+
+/*Includes*/
+#include "stm32f4xx_hal.h"
+#include "i2c.h"
 #include "bmp280.h"
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <stdint.h>
 
 
 static struct bmp280_data_structure {

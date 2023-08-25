@@ -1,3 +1,13 @@
+/***********************************************************************
+* File: bh1750.h
+*
+* Description: bh1750 library functions prototypes & macros.
+*
+* Author: Subhadeep Dhang
+*
+* Date: August 25, 2023
+************************************************************************/
+
 #ifndef BH1750_H
 #define BH1750_H
 

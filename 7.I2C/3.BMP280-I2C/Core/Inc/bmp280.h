@@ -1,9 +1,15 @@
+/***********************************************************************
+* File: bmp280.h
+*
+* Description: bmp280 library functions prototypes & macros.
+*
+* Author: Subhadeep Dhang
+*
+* Date: August 22, 2023
+************************************************************************/
+
 #ifndef BMP280_H
 #define BMP280_H
-
-/*Includes*/
-#include "stm32f4xx_hal.h"
-#include "i2c.h"
 
 /*Driver Macros*/
 

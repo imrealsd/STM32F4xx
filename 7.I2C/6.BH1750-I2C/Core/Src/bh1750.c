@@ -1,3 +1,17 @@
+/***********************************************************************
+* File: bh1750.c
+*
+* Description: Implementation of bh1750 library functions.
+*
+* Dependencies: "I2C.h" & "stm32f4xx_hal.h" provided  by STMicroelectronics
+*
+* Author: Subhadeep Dhang
+*
+* Date: August 25, 2023
+************************************************************************/
+
+
+/*Includes*/
 #include "stm32f4xx_hal.h"
 #include "bh1750.h"
 #include "i2c.h"
