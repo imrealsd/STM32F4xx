@@ -25,11 +25,11 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void configure_brownout_thresold_level (void);
+void configure_brownout_threshold_level (void);
 
 /**
  * README:
- * "configure_brownout_thresold_level" function write the [option bytes] inside the
+ * "configure_brownout_threshold_level" function write the [option bytes] inside the
  * flash memory (non-volatile) ,that configuratrion remains until we change it.
  * uploading different user-flash binaries does not affect the [option bytes] section.
 */
@@ -46,7 +46,7 @@ int main(void)
   SystemClock_Config();
   MX_GPIO_Init();
 
-  configure_brownout_thresold_level();
+  configure_brownout_threshold_level();
 
   while (1)
   {
@@ -60,7 +60,7 @@ int main(void)
 }
 
 
-void configure_brownout_thresold_level (void)
+void configure_brownout_threshold_level (void)
 { 
   /*unlock write protection*/
   FLASH->OPTKEYR = OPTKEY1;
